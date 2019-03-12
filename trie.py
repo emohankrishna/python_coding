@@ -52,6 +52,40 @@ class Trie:
     def display(self,current_node:TrieNode,l=[]):
         pass
 
+    def get_remaining_count(self,root:TrieNode,count =0):
+        temp:TrieNode = root
+        children : dict = temp.children
+        if children.__len__() == 0:
+            return count+temp.count
+        else:
+            if temp.count > 0 :
+                count = count + temp.count
+            for trie_node in children.values():
+                count =  self.get_remaining_count(trie_node,count)
+            else:
+                return count
+
+
+
+    def get_prefix_count(self,word):
+        temp : TrieNode = self.root
+        counter = 0
+        for i in range(0,len(word)):
+            if temp.children.get(word[i]) is None:
+                return 0
+            elif temp.children.get(word[i]):
+                temp = temp.children.get(word[i])
+                if temp.count > 0 and temp.isEndOfWord and len(word)-1 == i:
+                    #given word is present in the Trie
+                    counter = counter + 1
+                    self.get_remaining_count(temp.children)
+
+
+
+
+
+
+
     def search_word(self,word):
         current_node : TrieNode = self.root
         f_count : int = 0
@@ -72,14 +106,13 @@ class Trie:
 trie = Trie()
 trie.add_one("abc")
 trie.add_one("abcde")
-trie.add_one("Ajith")
-trie.add_many(['mohan','bhargav','sahith','sai','kanna'])
-trie.add_many(['mohan','bhargav','sahith','sai','kanna'])
+trie.add_many(['mohan','bhargav','sahith','sai','mohit'])
+trie.add_one("moh")
+# trie.add_many(['mohan','bhargav','sahith','sai','kanna'])
 # trie.add_one("mohan")
-print("Ajith",trie.search_word("Ajith"))
-print('bhargav',trie.search_word("bhargav"))
-print('sathih',trie.search_word("sahith"))
-print('sai',trie.search_word("sai"))
-print('sahit',trie.search_word("sahit"))
-
-
+# print("Ajith",trie.search_word("Ajith"))
+# print('bhargav',trie.search_word("bhargav"))
+# print('sathih',trie.search_word("sahith"))
+# print('sai',trie.search_word("sai"))
+# print('sahit',trie.search_word("sahit"))
+print("Count : ",trie.get_remaining_count(trie.root))
